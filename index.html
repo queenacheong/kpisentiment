@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/copy.css">
+    <title>Performance Measure Analysis</title>
+</head>
+<body>
+    <div class="col-lg-6 col-10 mx-auto py-5 my-5">
+        <div class="card p-4">
+            <h1>Performance Measure Analysis</h1>
+            <form id="form" action="http://localhost:5500/" method="POST">
+                <input type="text" id="input" class="form-control form-control-lg" required>
+                <p class="mt-2" id="response">Waiting to process...</p>
+                <input type="submit" class="btn btn-primary" value="Process">
+            </form>
+            <div id="kpi-results" class="mt-3"></div>
+        </div>
+    </div>
+
+    <script>
+        const responseElement = document.getElementById("response");
+        const inputElement = document.getElementById("input");
+        const formElement = document.getElementById("form");
+        const kpiResultsElement = document.getElementById("kpi-results");
+
+        formElement.addEventListener("submit", event => {
+            event.preventDefault(); // Prevents the page from reloading
+
+            fetch("http://localhost:5500/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    text: inputElement.value
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(res => {
+                responseElement.innerText = "Analysis Complete";
+                inputElement.value = "";
+
+                // Display KPI analysis results
+                kpiResultsElement.innerHTML = "<h2>KPI Relevance:</h2>";
+                res.kpiResults.forEach(result => {
+                    kpiResultsElement.innerHTML += `<p>${result.kpi}: ${result.relevance.toFixed(2)}</p>`;
+                });
+            })
+            .catch(err => {
+                responseElement.innerText = "Error processing the request";
+                console.error(err);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "KPIs": [
+      {
+        "name": "Customer Satisfaction",
+        "description": "This KPI measures the level of satisfaction of customers based on their feedback."
+      },
+      {
+        "name": "Operational Efficiency",
+        "description": "This KPI evaluates the efficiency of operations and workflows within the organization."
+      }
+    ]
+  }
+  
+  
